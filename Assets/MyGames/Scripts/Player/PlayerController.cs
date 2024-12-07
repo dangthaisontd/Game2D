@@ -40,4 +40,5 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(groundCheck.position, radius);
     }
+    
 }
