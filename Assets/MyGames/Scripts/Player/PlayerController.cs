@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
         float horizontal = Input.GetAxis("Horizontal");
         rb.linearVelocity = new Vector2(horizontal * moveSpeed, rb.linearVelocity.y);
         //
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(IsGround()&&Input.GetKeyDown(KeyCode.Space))
         {
             Jum();
         }
@@ -34,5 +34,10 @@ public class PlayerController : MonoBehaviour
     void Jum()
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumFore);
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(groundCheck.position, radius);
     }
 }
