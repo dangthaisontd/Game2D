@@ -1,7 +1,4 @@
 using UnityEngine;
-
-
-
 [AddComponentMenu("DangSon/PlayerController")]
 public class PlayerController : MonoBehaviour
 {
