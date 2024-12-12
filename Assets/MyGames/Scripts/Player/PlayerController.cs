@@ -1,18 +1,30 @@
+using System;
+using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
+
 [AddComponentMenu("DangSon/PlayerController")]
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5.0f;
-    private Rigidbody2D rb;
+    [Header("Player Controller")]
+    public float moveSpeed = 5.0f; 
+    public LayerMask groundLayer;
     public float jumFore=5.0f;
     [SerializeField] private Transform groundCheck;
-    public LayerMask groundLayer;
     public float radius = 0.5f;
     bool facingRight = true;
+    private Animator anim;
+    private Rigidbody2D rb;
+    //
+    private int isWalkId;
+    private int isJumId;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponentInChildren<Animator>();
+        isWalkId = Animator.StringToHash("IsWalk");
+        isJumId = Animator.StringToHash("IsJum");
     }
 
     // Update is called once per frame
@@ -22,7 +34,7 @@ public class PlayerController : MonoBehaviour
         //
         if(IsGround()&&Input.GetKeyDown(KeyCode.Space))
         {
-            Jum();
+           StartCoroutine(Jum());
         }
     }
     private void Move()
@@ -33,14 +45,26 @@ public class PlayerController : MonoBehaviour
         {
             Flip();
         }
+        if(IsGround()&&Math.Abs(horizontal)>0)
+        {
+            anim.SetBool(isWalkId, true);
+        }
+        else
+        {
+            anim.SetBool(isWalkId, false);
+        }
     }
     bool IsGround()
     {
         bool isLocalGround = Physics2D.OverlapCircle(groundCheck.position, radius, groundLayer);
         return isLocalGround;
     }
-    void Jum()
+    IEnumerator Jum()
     {
+        
+        anim.SetTrigger(isJumId);
+        //tre 03f
+        yield return new WaitForSeconds(0.3f);
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumFore);
     }
     void Flip()
