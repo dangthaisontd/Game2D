@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     public LayerMask groundLayer;
     public float radius = 0.5f;
-
+    bool facingRight = true;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,12 +18,20 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        rb.linearVelocity = new Vector2(horizontal * moveSpeed, rb.linearVelocity.y);
+        Move();
         //
         if(IsGround()&&Input.GetKeyDown(KeyCode.Space))
         {
             Jum();
+        }
+    }
+    private void Move()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        rb.linearVelocity = new Vector2(horizontal * moveSpeed, rb.linearVelocity.y);
+        if((horizontal>0&&!facingRight)||(horizontal<0&&facingRight))
+        {
+            Flip();
         }
     }
     bool IsGround()
@@ -34,6 +42,13 @@ public class PlayerController : MonoBehaviour
     void Jum()
     {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumFore);
+    }
+    void Flip()
+    {
+        facingRight = !facingRight;
+        Vector2 scale = transform.localScale;
+        scale.x *= -1;
+        transform.localScale = scale;
     }
     private void OnDrawGizmos()
     {
